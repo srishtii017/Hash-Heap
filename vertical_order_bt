@@ -1,0 +1,53 @@
+import java.util.*;
+public class Main {
+    private static Node root;
+    private static class Node{
+        int val;
+        Node left;
+        Node right;
+        Node(int val){
+            this.val=val;
+            this.left=null;
+            this.right=null;
+        }
+    }
+    private static Node createTree(List<Integer> a,int idx){
+        if(idx>=a.size() || a.get(idx)==-1) return null;
+        Node n=new Node(a.get(idx));
+        n.left=createTree(a,2*idx+1);
+        n.right=createTree(a,2*idx+2);
+        return n;
+    }
+    private static void display(Node root){
+        if(root==null) return;
+        System.out.println(root.val);
+        display(root.left);
+        display(root.right);
+    }
+    private static void print(List<Integer> l){
+        for(int v:l){
+            System.out.print(v+" ");
+        }
+    }
+    private static TreeMap<Integer,List<Integer>> hm;
+    private static void printVertical(Node root,int hd){ 
+        if(root==null) return;
+        if(!hm.containsKey(hd)) hm.put(hd,new ArrayList<>());
+        hm.get(hd).add(root.val);
+        printVertical(root.left,hd-1);
+        printVertical(root.right,hd+1);
+    }
+    public static void main(String args[]) {
+        Scanner sc=new Scanner(System.in);
+        int n=sc.nextInt();
+        List<Integer> a=new ArrayList<>();
+        while(sc.hasNextInt()) a.add(sc.nextInt());
+        root=createTree(a,0);
+        // display(root);
+        hm=new TreeMap<>();
+        printVertical(root,0);
+        for(int key:hm.keySet()){
+            print(hm.get(key));
+        }
+    }
+}
